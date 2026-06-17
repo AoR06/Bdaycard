@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Aunty!</title>
+    <style>
+        :root {
+            --bg-color: #fdf6f6;
+            --envelope-bg: #f3d1cc;
+            --envelope-inside: #e9bebe;
+            --envelope-flap: #e5b3b3;
+            --card-bg: #ffffff;
+            --text-color: #5c3d3d;
+            --accent-color: #c97d7d;
+            --bear-color: #b07d62;
+            --bear-dark: #8c5a41;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        /* Main Container holding the envelope and the bear */
+        .scene-container {
+            position: relative;
+            width: 450px;
+            height: 300px;
+        }
+
+        /* Envelope Base */
+        .envelope-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: var(--envelope-inside);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 0 0 8px 8px;
+            cursor: pointer;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .envelope-wrapper:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Front envelope flaps using borders */
+        .envelope-wrapper::before {
+            content: "";
+            position: absolute;
+            z-index: 13;
+            border-left: 225px solid transparent;
+            border-right: 225px solid transparent;
+            border-bottom: 150px solid var(--envelope-bg);
+            bottom: 0;
+            left: 0;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .envelope-wrapper::after {
+            content: "";
+            position: absolute;
+            z-index: 13;
+            border-top: 150px solid transparent;
+            border-bottom: 150px solid transparent;
+            border-left: 230px solid var(--envelope-bg);
+            top: 0;
+            left: 0;
+            border-radius: 0 0 0 8px;
+        }
+
+        /* Top Flap */
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-left: 225px solid transparent;
+            border-right: 225px solid transparent;
+            border-top: 160px solid var(--envelope-flap);
+            transform-origin: top;
+            transition: transform 0.5s ease, z-index 0.3s ease;
+            z-index: 14;
+        }
+
+        /* The Heart Seal */
+        .heart-seal {
+            position: absolute;
+            top: 135px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            font-size: 2rem;
+            color: #e74c3c;
+            transition: opacity 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        /* The Letter Card */
+        .letter {
+            position: absolute;
+            bottom: 5px;
+            left: 25px;
+            width: 400px;
+            height: 180px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            z-index: 11;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--text-color);
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), height 0.6s ease;
+        }
+
+        .letter h1 {
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+            color: #d25d5d;
+            font-weight: 700;
+        }
+
+        .letter p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* --- CSS CUTE BEAR --- */
+        .cute-bear {
+            position: absolute;
+            right: -90px;
+            bottom: 0;
+            width: 80px;
+            height: 90px;
+            z-index: 5;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        /* Bear Body Parts using pure CSS */
+        .bear-head {
+            position: absolute;
+            width: 70px;
+            height: 60px;
+            background: var(--bear-color);
+            border-radius: 50% 50% 45% 45%;
+            top: 15px;
+            left: 5px;
+        }
+
+        .bear-ear {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: var(--bear-color);
+            border-radius: 50%;
+            top: 8px;
+        }
+        .bear-ear.left { left: 2px; }
+        .bear-ear.right { right: 2px; }
+        .bear-ear::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ffb6b6;
+            border-radius: 50%;
+            top: 5px;
+            left: 5px;
+        }
+
+        .bear-eye {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #2c1a11;
+            border-radius: 50%;
+            top: 28px;
+        }
+        .bear-eye.left { left: 20px; }
+        .bear-eye.right { right: 20px; }
+
+        .bear-muzzle {
+            position: absolute;
+            width: 22px;
+            height: 16px;
+            background: #f7ddcf;
+            border-radius: 50%;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .bear-nose {
+            position: absolute;
+            width: 8px;
+            height: 5px;
+            background: #2c1a11;
+            border-radius: 50%;
+            top: 3px;
+            left: 7px;
+        }
+
+        .bear-blush {
+            position: absolute;
+            width: 10px;
+            height: 6px;
+            background: rgba(255, 100, 100, 0.4);
+            border-radius: 50%;
+            top: 34px;
+        }
+        .bear-blush.left { left: 10px; }
+        .bear-blush.right { right: 10px; }
+
+        /* Bear Paws raising up in joy */
+        .bear-paw {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: var(--bear-color);
+            border-radius: 50%;
+            top: 25px;
+        }
+        .bear-paw.left { left: -8px; transform: rotate(-30deg); }
+        .bear-paw.right { right: -8px; transform: rotate(30deg); }
+
+        /* --- Open Animations --- */
+        
+        .scene-container.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .scene-container.open .heart-seal {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .scene-container.open .letter {
+            transform: translateY(-210px);
+            opacity: 1;
+            z-index: 15;
+            height: 350px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Make Bear Appear and start jumping */
+        .scene-container.open .cute-bear {
+            opacity: 1;
+            transform: scale(1);
+            animation: bearJump 0.6s infinite alternate ease-in-out;
+        }
+
+        @keyframes bearJump {
+            0% { transform: translateY(0) scale(1, 0.95); }
+            100% { transform: translateY(-50px) scale(0.95, 1); }
+        }
+
+        /* Responsive Mobile Tweak */
+        @media (max-width: 550px) {
+            .scene-container { width: 320px; height: 213px; }
+            .envelope-wrapper::before { border-left-width: 160px; border-right-width: 160px; border-bottom-width: 106px; }
+            .envelope-wrapper::after { border-top-width: 106px; border-bottom-width: 106px; border-left-width: 165px; }
+            .flap { border-left-width: 160px; border-right-width: 160px; border-top-width: 113px; }
+            .letter { width: 280px; height: 130px; left: 20px; bottom: 5px; padding: 15px; }
+            .letter h1 { font-size: 1.1rem; margin-bottom: 6px; }
+            .letter p { font-size: 0.75rem; line-height: 1.4; }
+            .heart-seal { top: 95px; font-size: 1.6rem; }
+            .scene-container.open .letter { transform: translateY(-150px); height: 260px; }
+            .cute-bear { right: -45px; bottom: -20px; transform: scale(0.7); }
+            .scene-container.open .cute-bear { transform: scale(0.7); animation: bearJumpMobile 0.6s infinite alternate ease-in-out; }
+        }
+        @keyframes bearJumpMobile {
+            0% { transform: translateY(0) scale(0.7, 0.65); }
+            100% { transform: translateY(-35px) scale(0.65, 0.7); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scene-container" id="cardScene">
+        <div class="envelope-wrapper">
+            <div class="flap"></div>
+            <div class="heart-seal">❤️</div>
+            
+            <div class="letter">
+                <h1>Happy Birthday Aunty! 🎉🌷</h1>
+                <p>Wishing you lots of happiness, good health, love, and laughter today and always. Thank you for being such a kind and wonderful person. Stay blessed, keep smiling, and have an amazing day! ❤️✨</p>
+            </div>
+        </div>
+
+        <div class="cute-bear">
+            <div class="bear-ear left"></div>
+            <div class="bear-ear right"></div>
+            <div class="bear-paw left"></div>
+            <div class="bear-paw right"></div>
+            <div class="bear-head">
+                <div class="bear-eye left"></div>
+                <div class="bear-eye right"></div>
+                <div class="bear-blush left"></div>
+                <div class="bear-blush right"></div>
+                <div class="bear-muzzle">
+                    <div class="bear-nose"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cardScene = document.getElementById('cardScene');
+        
+        cardScene.addEventListener('click', () => {
+            cardScene.classList.toggle('open');
+        });
+    </script>
+
+</body>
+</html>
